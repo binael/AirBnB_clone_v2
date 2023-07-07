@@ -1,0 +1,8 @@
+This 
+ is 
+ a multiline test
+	location /current/ {
+		alias /data/web_static/current/;
+	}
+ that I want 
+ to dedicate 

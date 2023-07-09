@@ -3,12 +3,11 @@
 """ A python script that compreses the content of the web folder
 """
 
-from fabric.api import local, run, put, settings
+from fabric.api import *
 from datetime import datetime
 import os
 
 env.hosts = ['52.86.109.82', '54.175.133.2']
-
 
 def do_pack():
     """
@@ -39,28 +38,23 @@ def do_deploy(archive_path):
     if not os.path.exits(archive_path):
         return False
 
-    class FabricException(Exception):
-        pass
+    file_name = os.path.basename(archive_path)
+    name = file_name.split('.')
+    folder = name[0]
+    full_folder = '/data/web_static/releases/{}/'.format(folder)
 
-    with settings(abort_exception=FabricException):
-        try:
-            file_name = os.path.basename(archive_path)
-            name = file_name.split('.')
-            folder = name[0]
-            full_folder = '/data/web_static/releases/{}/'.format(folder)
+    with cd('/tmp'):
+        put(archive_path, '{}'.format(file_name))
 
-            with cd('/tmp'):
-                put(archive_path, '{}'.format(file_name))
+    run('mkdir -p {}'.format(full_folder))
 
-            run('mkdir -p {}'.format(full_folder))
-            run('tar -xzf /tmp/{} -C {}'.format(file_name, full_folder))
+    run('tar -xzf /tmp/{} -C {}'.format(file_name, full_folder))
 
-            with cd('/tmp'):
-                run('rm -f {}'.file_name)
+    with cd('/tmp'):
+        run('rm -f {}'.file_name)
 
-            run('rm -f /data/web_static/current/')
-            run('ln -sf {} /data/web_static/current/'.format(full_folder))
-        except FabricException:
-            return False
-        else:
-            return True
+    run('rm -f /data/web_static/current/')
+
+    run('ln -sf {} /data/web_static/current/'.format(full_folder))
+
+    return True

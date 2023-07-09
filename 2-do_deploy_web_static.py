@@ -43,17 +43,15 @@ def do_deploy(archive_path):
     folder = name[0]
     full_folder = '/data/web_static/releases/{}/'.format(folder)
 
-    with cd('/tmp'):
-        put(archive_path, '{}'.format(file_name))
+    put(archive_path, '/tmp/{}'.format(file_name))
 
     run('mkdir -p {}'.format(full_folder))
 
     run('tar -xzf /tmp/{} -C {}'.format(file_name, full_folder))
 
-    with cd('/tmp'):
-        run('rm -f {}'.file_name)
+    run('rm -f /tmp/{}'.file_name)
 
-    run('rm -f /data/web_static/current/')
+    run('rm -R -f /data/web_static/current/')
 
     run('ln -sf {} /data/web_static/current/'.format(full_folder))
 

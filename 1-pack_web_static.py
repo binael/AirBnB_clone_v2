@@ -22,4 +22,5 @@ def do_pack():
     if result.failed:
         return None
     else:
+        local('chmod 664 versions/{}'.format(my_file))
         return 'versions/{}'.format(my_file)

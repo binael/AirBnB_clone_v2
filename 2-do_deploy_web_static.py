@@ -5,6 +5,7 @@
 
 from fabric.api import local
 from datetime import datetime
+import os
 
 
 def do_pack():
@@ -12,14 +13,13 @@ def do_pack():
     A python fabric function that compreses to tgz
     """
 
-    my_time = datetime.now()
-    my_time = my_time.strftime("%Y%m%d%H%M%S")
-    my_file = 'web_static_{}.tgz'.format(my_time)
+    my_time = datetime.strftime('%Y%M%D%H%M%S')
+    file_name = 'web_static_{}.tgz'.format(my_time)
 
     local('mkdir -p versions')
-    result = local('tar -cvzf versions/{} web_static'.format(my_file))
+    result = local('tar -czvf versions/{} web_static'.format(file_name))
 
     if result.failed:
         return None
     else:
-        return 'versions/{}'.format(my_file)
+        return 'versions/{}'.format(file_name)

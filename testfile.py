@@ -3,7 +3,7 @@
 """ A python script that compreses the content of the web folder
 """
 
-from fabric.api import run, put
+from fabric.api import run, put, env
 from datetime import datetime
 import os
 
@@ -37,7 +37,7 @@ def do_deploy(archive_path):
         archive_path - the path to archive
     """
 
-    if not os.path.exits(archive_path):
+    if not os.path.exists(archive_path):
         return False
 
     for host in env.hosts:
@@ -46,7 +46,7 @@ def do_deploy(archive_path):
         folder = name[0]
         full_folder = '/data/web_static/releases/{}/'.format(folder)
 
-        r = put(archive_path, '{}'.format(f_name))
+        r = put(archive_path, '/tmp/{}'.format(f_name))
         if r.failed:
             return False
 
@@ -58,7 +58,7 @@ def do_deploy(archive_path):
         if r.failed:
             return False
 
-        r = run('rm -f /tmp/{}'.f_name)
+        r = run('rm -f /tmp/{}'.format(f_name))
         if r.failed:
             return False
 

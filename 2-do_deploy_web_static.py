@@ -43,11 +43,15 @@ def do_deploy(archive_path):
         if r.failed:
             return False
 
-        r = run('rm -R -f /data/web_static/current/')
+        r = run('rm -rf /data/web_static/current/')
         if r.failed:
             return False
 
-        r = run('ln -sf {} /data/web_static/current/'.format(full_folder))
+        r = run('ln -s {}/web_static/* /data/web_static/current/'.format(full_folder))
+        if r.failed:
+            return False
+
+        r = run('service nginx restart')
         if r.failed:
             return False
 

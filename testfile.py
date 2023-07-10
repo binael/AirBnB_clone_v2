@@ -10,25 +10,6 @@ import os
 env.hosts = ['52.86.109.82', '54.175.133.2']
 
 
-def do_pack():
-    """
-    A python fabric function that compreses to tgz
-    """
-
-    my_time = datetime.now()
-    my_time = my_time.strftime("%Y%m%d%H%M%S")
-    my_file = 'web_static_{}.tgz'.format(my_time)
-
-    local('mkdir -p versions')
-    result = local('tar -cvzf versions/{} web_static'.format(my_file))
-
-    if result.failed:
-        return None
-    else:
-        local('chmod 664 versions/{}'.format(my_file))
-        return 'versions/{}'.format(my_file)
-
-
 def do_deploy(archive_path):
     """
     A python fabric function that deploys and distributes archive
@@ -62,11 +43,15 @@ def do_deploy(archive_path):
         if r.failed:
             return False
 
-        r = run('rm -R -f /data/web_static/current/')
+        r = run('rm -rf /data/web_static/current/')
         if r.failed:
             return False
 
-        r = run('ln -sf {} /data/web_static/current/'.format(full_folder))
+        r = run('ln -sf {}/web_static/* /data/web_static/current/'.format(full_folder))
+        if r.failed:
+            return False
+
+        r = run('sudo systemctl restart nginx')
         if r.failed:
             return False
 

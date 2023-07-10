@@ -47,7 +47,8 @@ def do_deploy(archive_path):
         if r.failed:
             return False
 
-        r = run('ln -s {}/web_static/* /data/web_static/current/'.format(full_folder))
+        data = 'ln -s {}/web_static/* /data/web_static/current/'
+        r = run(data.format(full_folder))
         if r.failed:
             return False
 

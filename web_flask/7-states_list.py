@@ -1,16 +1,18 @@
 #!/usr/bin/python3
-
 """A python script that uses web flask to host web application
+And prints out the states
+Func: 
+    close_db
+    list_states
 """
 
 from flask import Flask, render_template
 from models import storage
 
-
 app = Flask(__name__)
 
 
-@app.teardown.appcontext
+@app.teardown_appcontext
 def close_db(exception=None):
     """Close db connections
     """

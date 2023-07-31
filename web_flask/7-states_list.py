@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 """A python script that uses web flask to host web application
 And prints out the states
-Func: 
+Func:
     close_db
     list_states
 """
 
 from flask import Flask, render_template
 from models import storage
+from models.state import State
 
 app = Flask(__name__)
 
@@ -23,7 +24,7 @@ def close_db(exception=None):
 def list_states():
     """List all states
     """
-    states = storage.all('State').values()
+    states = storage.all(State).values()
     states = sorted(states)
     return render_template('7-states_list.html', states=states)
 
